@@ -39,6 +39,9 @@ class SectionedConfigParser(_RawConfigParser):
         return _RawConfigParser.__init__(self, allow_no_value = True)    
     
     def read(self, pathfilename):
+        #seb: expand path to allow using homedir and relative paths
+        pathfilename = os.path.realpath(os.path.expanduser(pathfilename))
+
         with codecs.open(pathfilename, 'r', encoding=ServiceDefault.CHAR_CODEC) as input_file:
             _RawConfigParser.readfp(self, input_file)
 
@@ -68,6 +71,9 @@ class NoSectionConfigParser(_RawConfigParser):
     _default_section = u'defaultsection'
     
     def read(self, pathfilename):
+        #seb: expand path to allow using homedir and relative paths
+        pathfilename = os.path.realpath(os.path.expanduser(pathfilename))
+
         with codecs.open(pathfilename, 'r', encoding=ServiceDefault.CHAR_CODEC) as input_file:
             config_pairs = input_file.read()
         with _closing(_StringIO(u"[{0}]{1}{2}".format(self._default_section, 
